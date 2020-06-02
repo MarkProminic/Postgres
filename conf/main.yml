@@ -1,0 +1,128 @@
+--- 
+- 
+  become: true
+  gather_facts: true
+  hosts: all
+  name: "Postgres"
+  vars_files:
+    - all
+  tasks: 
+    - 
+      debug: 
+        msg: "The hostname is {{ ansible_hostname }} and the OS is {{ ansible_version }}"
+      name: "Display the config"
+    -
+      name: "Install a list of packages"
+      yum:
+        name:
+          - https://download.postgresql.org/pub/repos/yum/9.6/redhat/rhel-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm
+    - 
+      name: "Install a list of packages"
+      yum: 
+        name: 
+          - java-1.8.0-openjdk-devel
+          - net-tools
+          - vim
+          - bash-completion
+          - tmux
+          - tree
+          - htop
+          - wget
+          - unzip
+          - curl
+          - git
+          - postgresql96
+          - postgresql96-server
+          - postgresql96-contrib
+          - postgresql96-libs
+    - 
+      name: "Set timezone to {{ timezone }}"
+      timezone: 
+        name: "{{ timezone }}"
+    - 
+      blockinfile: 
+        block: |
+            {{ asterisk_ip }} {{ asterisk_host }} vagrant.asterisk
+            {{ webinterface_ip }} {{ webinterface_host }} vagrant.webinterface
+            {{ postgres_ip }} {{ postgres_host }} vagrant.postgres
+        create: true
+        path: /etc/hosts
+      name: "Setting Host File Configuration for Switchboard Cluster"
+    - 
+      name: "Starting NFS"
+      service: 
+        enabled: true
+        name: nfs
+        state: started
+    - 
+      blockinfile: 
+        block: |
+        create: true
+        path: /etc/fstab
+      name: "Setting Host File Configuration for Switchboard Cluster"
+#    - 
+#      mount: 
+#        dump: 0
+#        fstype: nfs
+#        opts: defaults
+#        passno: 0
+#        path: "{{ item.path }}"
+#        src: "{{ item.src }}"
+#        state: mounted
+#      name: "Mounting NFS Shares"
+#      with_items: nfsmounts
+    - 
+      command: "yum clean all"
+      name: "Cleaning Yum Cache"
+    - name: Add EPEL repository
+      yum:
+        name: epel-release
+        state: present
+    - name: Initialize the Postgres Database
+      become: true
+      shell: /usr/pgsql-9.6/bin/postgresql96-setup initdb
+
+    - name: Starting Postgres
+      service:
+        name:  postgresql-9.6
+        state: started
+        enabled: yes
+    -
+      name: Configuring Postgres
+      copy:
+        src: /vagrant/configs/postgresql.conf
+        dest: /var/lib/pgsql/9.6/data/postgresql.conf
+        owner: postgres
+        group: postgres
+    -
+      name: Configuring Postgres
+      copy:
+        src: /vagrant/configs/pg_hba.conf
+        dest: /var/lib/pgsql/9.6/data/pg_hba.conf
+        owner: postgres
+        group: postgres
+
+    - name: Restart service httpd, in all cases
+      service:
+        name:  postgresql-9.6
+        state: restarted
+        enabled: yes
+
+    - name: Importing lexiiodb data
+      become_user: postgres
+      shell: "{{ item }}"
+      with_items:
+        - psql -f "/vagrant/sql/CreateRoles.sql"
+        - psql -f "/vagrant/sql/asteriskdb_config.sql"
+        - psql -f "/vagrant/sql/call_record.sql"
+        - psql -f "/vagrant/sql/extensions.sql"
+        - psql -f "/vagrant/sql/followme_numbers.sql"
+        - psql -f "/vagrant/sql/followme.sql"
+        - psql -f "/vagrant/sql/meetme.sql"
+        - psql -f "/vagrant/sql/musiconhold.sql"
+        - psql -f "/vagrant/sql/queue_log.sql"
+        - psql -f "/vagrant/sql/queues.sql"
+        - psql -f "/vagrant/sql/queue_rules.sql"
+        - psql -f "/vagrant/sql/queue_members.sql"
+        - psql -f "/vagrant/sql/request_map.sql"
+        - psql -f "/vagrant/sql/sippeers.sql"

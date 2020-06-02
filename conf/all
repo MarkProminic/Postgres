@@ -1,0 +1,7 @@
+timezone: "America/Chicago"
+asterisk_ip: 192.168.2.164 vagrant.asterisk
+asterisk_host: vagrant.asterisk
+webinterface_ip: 192.168.2.165 vagrant.webinterface
+webinterface_host: vagrant.webinterface
+postgres_ip: 192.168.2.166 vagrant.postgres
+postgres_host: vagrant.postgres
