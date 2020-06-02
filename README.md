@@ -1,5 +1,5 @@
-# Guacamole Gateway
-Primary goal is to use Vagrant to deploy Guacamole on CentOS as a means to provide a HTML5 GUI for multiple Projects.
+# Postgres for Switcboard
+Primary goal is to use Vagrant to deploy Postgres for Switcboard on CentOS as a means to provide a Asterisked and Grails based GUI.
 
 ## Getting Started
 
@@ -35,13 +35,13 @@ yum -y install https://releases.hashicorp.com/vagrant/1.9.6/vagrant_1.9.6_x86_64
 sudo yum install git
 ```
 
-### Downloading Vagrant-Guacamole-CentOS-8.1 Project
+### Downloading Postgres for Switcboard Project
 
 Open up a terminal and perform the following git command:
 
 ```shell
-git clone https://github.com/Makr91/Vagrant-Guacamole-CentOS-8.1.git
-cd Vagrant-Guacamole-CentOS-8.1
+git clone https://github.com/MarkProminic/Postgres.git
+cd Postgres
 ```
 ### Starting Vagrant
 The installation process is estimated to take about 15 - 30 Minutes (mayber longer on older machines)
