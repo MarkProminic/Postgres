@@ -90,14 +90,14 @@
     -
       name: Configuring Postgres
       copy:
-        src: /vagrant/configs/postgresql.conf
+        src: /vagrant/postgres/configs/postgresql.conf
         dest: /var/lib/pgsql/9.6/data/postgresql.conf
         owner: postgres
         group: postgres
     -
       name: Configuring Postgres
       copy:
-        src: /vagrant/configs/pg_hba.conf
+        src: /vagrant/postgres/configs/pg_hba.conf
         dest: /var/lib/pgsql/9.6/data/pg_hba.conf
         owner: postgres
         group: postgres
@@ -112,17 +112,17 @@
       become_user: postgres
       shell: "{{ item }}"
       with_items:
-        - psql -f "/vagrant/sql/CreateRoles.sql"
-        - psql -f "/vagrant/sql/asteriskdb_config.sql"
-        - psql -f "/vagrant/sql/call_record.sql"
-        - psql -f "/vagrant/sql/extensions.sql"
-        - psql -f "/vagrant/sql/followme_numbers.sql"
-        - psql -f "/vagrant/sql/followme.sql"
-        - psql -f "/vagrant/sql/meetme.sql"
-        - psql -f "/vagrant/sql/musiconhold.sql"
-        - psql -f "/vagrant/sql/queue_log.sql"
-        - psql -f "/vagrant/sql/queues.sql"
-        - psql -f "/vagrant/sql/queue_rules.sql"
-        - psql -f "/vagrant/sql/queue_members.sql"
-        - psql -f "/vagrant/sql/request_map.sql"
-        - psql -f "/vagrant/sql/sippeers.sql"
+        - psql -f "/vagrant/postgres/sql/CreateRoles.sql"
+        - psql -f "/vagrant/postgres/sql/asteriskdb_config.sql"
+        - psql -f "/vagrant/postgres/sql/call_record.sql"
+        - psql -f "/vagrant/postgres/sql/extensions.sql"
+        - psql -f "/vagrant/postgres/sql/followme_numbers.sql"
+        - psql -f "/vagrant/postgres/sql/followme.sql"
+        - psql -f "/vagrant/postgres/sql/meetme.sql"
+        - psql -f "/vagrant/postgres/sql/musiconhold.sql"
+        - psql -f "/vagrant/postgres/sql/queue_log.sql"
+        - psql -f "/vagrant/postgres/sql/queues.sql"
+        - psql -f "/vagrant/postgres/sql/queue_rules.sql"
+        - psql -f "/vagrant/postgres/sql/queue_members.sql"
+        - psql -f "/vagrant/postgres/sql/request_map.sql"
+        - psql -f "/vagrant/postgres/sql/sippeers.sql"
